@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { LogOut, MenuIcon } from "lucide-react";
 import { RegisterLink, LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import Link from "next/link";
 
 export  async function UserNav() {
   
@@ -23,9 +24,30 @@ export  async function UserNav() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px] shadow-sm bg-transparent rounded-2xl bg-gray-100">
             {user ? (  
+               
+               <>
+                <DropdownMenuItem>
+                  <form className="w-full">
+                    <button type="submit" className="w-full text-start">
+                        Airbnb your Home
+                    </button>
+                  </form>
+               </DropdownMenuItem>
+
+               <DropdownMenuItem>
+                    <Link href="/my-homes" className="w-full">My Listings</Link>
+               </DropdownMenuItem>
+               <DropdownMenuItem>
+                    <Link href="/favorites" className="w-full">My Favorites</Link>
+               </DropdownMenuItem>
+               <DropdownMenuItem>
+                    <Link href="/reservation" className="w-full">My Reservations</Link>
+               </DropdownMenuItem>
+               <DropdownMenuSeparator />
                 <DropdownMenuItem className="py-2 px-2  bg-red-500 rounded-2xl">
                      <LogoutLink>Log out</LogoutLink>
                 </DropdownMenuItem>
+               </>
                        
                     ) : (
                         <>
