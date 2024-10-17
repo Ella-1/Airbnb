@@ -6,7 +6,7 @@ export async function GET() {
     const { getUser } = getKindeServerSession();
     const user = await getUser(); // Await the user once
 
-    if (!user || !user.id) {
+    if (!user || user === null || !user.id) {
         throw new Error("User not authenticated or invalid user object");
     }
 
@@ -27,6 +27,6 @@ export async function GET() {
     }
 
     // Use environment variable for redirection in production
-    const redirectUrl = process.env.REDIRECT_URL || "http://localhost:3000/";
-    return NextResponse.redirect(redirectUrl);
+
+    return NextResponse.redirect("http://localhost:3000/")
 }
