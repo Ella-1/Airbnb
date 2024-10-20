@@ -1,7 +1,19 @@
 export default function DescriptionPage(){
     return (
-        <div>
-            <h2>Hello from descrption you have added a description</h2>
+        <>
+        <div className="w-3/5 mx-auto">
+            <h2 className="text-3xl font-semibold tracking-tight">
+                Describe your Home as good as you can
+            </h2>
         </div>
+
+        <form>
+            <div className="mx-auto w-3/5 mt-10 flex flex-col gap-y-5 mb-36">
+                <div className="flex flex-col gap-y-2">
+                    
+                </div>
+            </div>
+        </form>
+        </>
     )
 }

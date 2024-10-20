@@ -6,7 +6,7 @@ import Image from "next/image"
 import { useState } from "react"
 
 export function SelectCategory(){
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+    const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined)
    return (
     <div className="grid grid-cols-4 md:grid-col-3 sm:grid-col-2 mt-10 gap-8 w-3/5 mx-auto mb-36">
     <input type="hidden" name="categoryName" value={selectedCategory as string} />
