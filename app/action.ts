@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import prisma from "@/lib/db";
+import { supabase } from "@/lib/superbase";
 
 export async function createAirbnbHome({ userId }: { userId: string }) {
   const data = await prisma.home.findFirst({
@@ -76,4 +77,9 @@ export async function createCategoryPage(formData: FormData) {
        const getGuest = formData.get('guests') as string
        const roomNumber = formData.get('room') as string
        const bathRoom = formData.get('bathroom') as string
+
+       const {data} = await supabase.storage.from('images').upload(`${imageFile.name}-${new Date()}`, imageFile,{
+        cacheControl: '2592000', // catch image for aywae 
+        contentType: 'image/png'
+       })
   }
