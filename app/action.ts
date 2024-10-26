@@ -69,7 +69,7 @@ export async function createCategoryPage(formData: FormData) {
     return redirect(`/create/${homeId}/description`);
   }
 
-  async function CreateDescription (formData:FormData) {
+  export async function CreateDescription (formData:FormData) {
        const title = formData.get('title') as string
        const description = formData.get('description') as string
        const price = formData.get('price')
@@ -77,9 +77,28 @@ export async function createCategoryPage(formData: FormData) {
        const getGuest = formData.get('guests') as string
        const roomNumber = formData.get('room') as string
        const bathRoom = formData.get('bathroom') as string
+       const homeId = formData.get('homeId') as string 
 
-       const {data} = await supabase.storage.from('images').upload(`${imageFile.name}-${new Date()}`, imageFile,{
-        cacheControl: '2592000', // catch image for aywae 
+       const {data: imageData} = await supabase.storage.from('images').upload(`${imageFile.name}-${new Date()}`, imageFile,{
+        cacheControl: '2592000', // catch image for a certain period of time 1 year 
         contentType: 'image/png'
        })
+
+       const data = await prisma.home.update({
+        where: {
+          id: homeId,
+        },
+        data: {
+          title:title,
+          description:description,
+          price:Number(price),
+          bedrooms:roomNumber,
+          bathrooms:bathRoom,
+          guests:getGuest,
+          photo: imageData?.id,
+          addedDescription: true,
+        }
+       });
+      
+       return redirect(`/create/${homeId}/address`)
   }
