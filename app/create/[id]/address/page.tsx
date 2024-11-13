@@ -1,18 +1,33 @@
+"use client"
+import { createLocation } from "@/app/action";
+import { CreationButtonBar } from "@/app/components/CreationBottonBar";
+import Maps from "@/app/components/Map";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useCountries } from "@/lib/getCountries";
+import dynamic from "next/dynamic";
+import { useState } from "react";
 
-export default function AddressRoute(){
+export default function AddressRoute({params}: {params : {id: string}}){
     const {getAllCountries } = useCountries()
+    const [LocationValue, setlocationValue] = useState("");
+    const LazyMap = dynamic(() => import('@/app/components/Map'), {
+        ssr: false,
+        loading: () => <Skeleton className="h-[50vh] w-full" />
+    });
+
     return(
      <>
      <div className="w-3/5 mx-auto">
        <h2 className="text-3xl font-semibold transition-colors mb-10"> where is your home Located</h2>
      </div>
 
-     <form>
+     <form action={createLocation}>
+        <input type="hidden" name="homeId" value={params.id} />
+        <input type="hidden" name="countryValue" value={LocationValue} />
         <div className="w-3/5 mx-auto">
             <div className="mb-5">
-                <Select required>
+                <Select required onValueChange={(value) => setlocationValue(value)}>
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a Country" />
                     </SelectTrigger>
@@ -30,7 +45,12 @@ export default function AddressRoute(){
                     </SelectContent>
                 </Select>
             </div>
+            {/* <Maps /> */}
+            <LazyMap LocationValue={LocationValue} />
+
         </div>
+
+        <CreationButtonBar />
      </form>
      </>
     )

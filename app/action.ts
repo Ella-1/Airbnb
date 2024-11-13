@@ -48,6 +48,14 @@ export async function createAirbnbHome({ userId }: { userId: string }) {
     });
 
     return redirect(`/create/${data.id}/structure`);
+} else if (data.addedCategory && data.addedDescription && !data.addedLoaction){
+  return redirect(`/create/${data.id}/address`)
+} else if (data.addedCategory && data.addedDescription && data.addedLoaction) {
+  const data = await prisma.home.create({
+    data: {
+      userId: userId,
+    },
+  });
 }
 }
 
@@ -79,10 +87,22 @@ export async function createCategoryPage(formData: FormData) {
        const bathRoom = formData.get('bathroom') as string
        const homeId = formData.get('homeId') as string 
 
-       const {data: imageData} = await supabase.storage.from('images').upload(`${imageFile.name}-${new Date()}`, imageFile,{
-        cacheControl: '2592000', // catch image for a certain period of time 1 year 
-        contentType: 'image/png'
-       })
+       const { data: imageData, error } = await supabase.storage.from('images').upload(
+        `${imageFile.name}-${new Date()}`, 
+        imageFile, 
+        {
+          cacheControl: '2592000', // cache image for a certain period of time (1 year)
+          contentType: 'image/png',
+        }
+      );
+      
+      if (error) {
+        console.error("Error uploading image:", error.message);
+        throw new Error("Image upload failed");
+      }
+      
+      console.log("Image uploaded successfully:", imageData);
+      
 
        const data = await prisma.home.update({
         where: {
@@ -102,3 +122,20 @@ export async function createCategoryPage(formData: FormData) {
       
        return redirect(`/create/${homeId}/address`)
   }
+
+export async function createLocation(formData:FormData) {
+  const homeId = formData.get('homeId') as string;
+  const countryValue = formData.get('countryValue') as string;
+
+  const data = await prisma.home.update({
+        where: {
+          id: homeId,
+    },
+    data: {
+      addedLoaction: true,
+      country: countryValue,
+    }
+  });
+
+  return redirect('/');
+}
